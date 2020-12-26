@@ -5,6 +5,9 @@ from flask import Flask, Blueprint
 from dollar.api.endpoints.companies import ns as companies_namespace
 from dollar.api.endpoints.settings import ns as settings_namespace
 from dollar.api.restx import api
+from dollar.fetcher import fetchScheduler
+
+fetchScheduler.start()
 
 app = Flask(__name__)
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
