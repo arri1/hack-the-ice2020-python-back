@@ -1,1 +1,1 @@
-MARKETPLACE_URL = 'http://127.0.0.1:5001/'
+MARKETPLACE_URL = 'https://hack-the-ice2020-market.herokuapp.com/'
