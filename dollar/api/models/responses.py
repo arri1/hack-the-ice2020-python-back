@@ -1,6 +1,23 @@
 from flask_restx import fields
 from dollar.api.restx import api
 
+order = api.model('Order', {
+    'id_company': fields.Integer(readOnly=True),
+    'delivery_time': fields.Integer(),
+    'delivery_cost': fields.Integer(),
+    'good': fields.Integer(),
+    'bad': fields.Integer(),
+    'feedback': fields.Integer(),
+    'call': fields.Integer(),
+})
+
+product = api.model('Product', {
+    'id_company': fields.Integer(readOnly=True),
+    'price': fields.Integer(),
+    'sale': fields.Integer(),
+    'views': fields.Integer(),
+})
+
 company = api.model('Company', {
     'id': fields.Integer(readOnly=True, description='The unique identifier'),
     'company': fields.String(readOnly=True, description='Company name'),
@@ -28,6 +45,11 @@ company = api.model('Company', {
     'min_sale': fields.Float(readOnly=True),
     'mean_sale': fields.Float(readOnly=True),
     'rate': fields.Float(readOnly=True),
+})
+
+company_extended = api.inherit('Extended company', company, {
+    'orders': fields.List(fields.Nested(order)),
+    'products': fields.List(fields.Nested(product)),
 })
 
 settings = api.model('Settings', {

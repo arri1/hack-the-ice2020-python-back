@@ -79,7 +79,11 @@ def fill_database(companies, orders, products):
     for category in companies_by_category:
         res = calculate_for_category(companies_by_category[category], df_orders, df_products)
         result_ar += res.T.to_dict().values()
+    for c in result_ar:
+        c['orders'] = list(df_orders[df_orders['id_company'] == c['id']].T.to_dict().values())
+        c['products'] = list(df_products[df_products['id_company'] == c['id']].T.to_dict().values())
     update_companies_collection(result_ar)
+
 
 def calculate_for_category(companies, df_orders, df_products):
     df_companies = pd.DataFrame(companies)

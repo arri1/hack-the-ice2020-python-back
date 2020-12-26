@@ -3,8 +3,7 @@ import logging
 from flask import request
 from flask_restx import Resource
 from dollar.api.models.requests import pagination_arguments
-from dollar.api.models.responses import page_of_companies
-from dollar.api.models.responses import company as company_model
+from dollar.api.models.responses import page_of_companies, company_extended
 from dollar.api.restx import api
 from dollar.db.companies_table import get_companies_count_and_page, get_companies_count_and_page_by_category, \
     get_company_by_id
@@ -64,10 +63,11 @@ class CompaniesByCategoryCollection(Resource):
         }
         return result
 
+
 @ns.route('/<int:id>')
 class Company(Resource):
 
-    @api.marshal_with(company_model)
+    @api.marshal_with(company_extended)
     def get(self, id: int):
         """
         Returns company.
