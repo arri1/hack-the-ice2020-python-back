@@ -1,5 +1,5 @@
 import logging.config
-
+from flask_cors import CORS
 import os
 from flask import Flask, Blueprint
 from dollar.api.endpoints.companies import ns as companies_namespace
@@ -10,6 +10,7 @@ from dollar.fetcher import fetchScheduler
 fetchScheduler.start()
 
 app = Flask(__name__)
+CORS(app)
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
