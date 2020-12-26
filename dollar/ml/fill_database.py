@@ -1,4 +1,4 @@
-from dollar.db.companies_table import update_companies_collection
+from dollar.db.companies_table import update_companies_collection, get_companies_collection
 from dollar.ml.set_functions import main_set, price_set, sale_set
 from dollar.ml.rate_functions import make_rate
 import pandas as pd
@@ -63,6 +63,13 @@ def sale_response(companies):
     return d
 
 
+choosable_chars = ['verification', 'days_online', 'own', 'median_delivery_time',
+                   'mean_product_price',
+                   'good_orders', 'bad_orders',
+                   'mean_feedback', 'mean_call', 'mean_cost_delivery',
+                   'count_products', 'median_sale', 'sum_views']
+
+
 def fill_database(companies, orders, products):
     categories_by_company_id = {}
     companies_by_category = {}
@@ -77,7 +84,7 @@ def fill_database(companies, orders, products):
     df_products = pd.DataFrame(products)
     result_ar = []
     for category in companies_by_category:
-        res = calculate_for_category(companies_by_category[category], df_orders, df_products)
+        res = calculate_for_category(companies_by_category[category], df_orders, df_products, choosable_chars)
         result_ar += res.T.to_dict().values()
     for c in result_ar:
         c['orders'] = list(df_orders[df_orders['id_company'] == c['id']].T.to_dict().values())
@@ -85,7 +92,15 @@ def fill_database(companies, orders, products):
     update_companies_collection(result_ar)
 
 
-def calculate_for_category(companies, df_orders, df_products):
+def set_rates_by_db(companies, category, chosen_chars):
+    dict_coef = get_settings()
+    df_companies = pd.DataFrame(get_companies_collection(category))
+    df_companies['rate'] = make_rate(df_companies, dict_coef, chosen_chars)
+    for company in companies:
+        company['rate'] = float(df_companies[df_companies['id'] == company['id']]['rate'])
+
+
+def calculate_for_category(companies, df_orders, df_products, chosen_chars):
     df_companies = pd.DataFrame(companies)
 
     dict_coef = get_settings()
@@ -94,6 +109,6 @@ def calculate_for_category(companies, df_orders, df_products):
     df_companies = price_set(df_companies, df_orders, df_products)
     df_companies = sale_set(df_companies, df_orders, df_products)
 
-    df_companies['rate'] = make_rate(df_companies, dict_coef)
+    df_companies['rate'] = make_rate(df_companies, dict_coef, chosen_chars)
 
     return df_companies

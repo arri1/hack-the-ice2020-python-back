@@ -1,3 +1,4 @@
+import json
 import logging
 
 from flask import request
@@ -6,7 +7,7 @@ from dollar.api.models.requests import pagination_arguments
 from dollar.api.models.responses import page_of_companies, company_extended
 from dollar.api.restx import api
 from dollar.db.companies_table import get_companies_count_and_page, get_companies_count_and_page_by_category, \
-    get_company_by_id
+    get_company_by_id, choosable_chars
 
 log = logging.getLogger(__name__)
 ns = api.namespace('companies', description='Companies endpoints')
@@ -52,7 +53,9 @@ class CompaniesByCategoryCollection(Resource):
         per_page = args.get('per_page')
         sort_by = args.get('sort_by', 'rate')
         is_descending = args.get('is_descending', 1)
-        total, items = get_companies_count_and_page_by_category(page, per_page, sort_by, is_descending, category_id)
+        chosen_chars = args.get('chosen_chars', choosable_chars)
+        chosen_chars = json.loads(chosen_chars)
+        total, items = get_companies_count_and_page_by_category(page, per_page, sort_by, is_descending, category_id, chosen_chars)
         result = {
             'page': page,
             'per_page': per_page,
