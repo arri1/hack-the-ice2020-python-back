@@ -21,6 +21,10 @@ def get_companies_count_and_page_by_category(page, per_page, sort_by, is_descend
     return total, items
 
 
+def get_company_by_id(_id):
+    return dict(companies_db.find_one({'id': _id}))
+
+
 def update_companies_collection(companies):
     companies_db.drop()
     companies_db.insert_many(companies)
