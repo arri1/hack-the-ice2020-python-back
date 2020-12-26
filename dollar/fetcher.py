@@ -23,7 +23,7 @@ def request_fetch_now():
 
 fetchScheduler = background.BackgroundScheduler()
 
-interval_fetch = fetchScheduler.add_job(fetch, 'interval', minutes=30)
-request_fetch_now()
+interval_fetch = fetchScheduler.add_job(fetch, 'interval', days=1)
+# request_fetch_now()
 
 atexit.register(lambda: fetchScheduler.shutdown(wait=False))

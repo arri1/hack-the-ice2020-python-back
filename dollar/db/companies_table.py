@@ -50,4 +50,5 @@ def get_companies_collection(category):
 
 def update_companies_collection(companies):
     companies_db.drop()
-    companies_db.insert_many(companies)
+    for company in companies:
+        companies_db.update_one({'id': company['id']}, {'$set': company}, True)
