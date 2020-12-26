@@ -1,9 +1,14 @@
+import logging
+
 from apscheduler.schedulers import background
 import atexit
 
+log = logging.getLogger(__name__)
+
 
 def fetch():
-    pass
+    global log
+    log.debug('started fetch')
 
 
 fetchScheduler = background.BackgroundScheduler()
