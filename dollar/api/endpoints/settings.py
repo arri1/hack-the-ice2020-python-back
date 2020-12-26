@@ -7,6 +7,7 @@ from dollar.api.models.responses import settings as settings_model
 from dollar.api.restx import api
 
 from dollar.db.settings_table import get_settings, update_settings
+from dollar.fetcher import request_fetch_now
 
 log = logging.getLogger(__name__)
 ns = api.namespace('settings', description='Settings endpoints')
@@ -26,4 +27,6 @@ class SettingsCollection(Resource):
     @api.response(200, 'Settings successfully updated.')
     def put(self):
         data = request.json
-        return update_settings(data)
+        res = update_settings(data)
+        request_fetch_now()
+        return res

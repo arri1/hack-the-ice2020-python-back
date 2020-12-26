@@ -23,8 +23,8 @@ class CompaniesCollection(Resource):
         args = pagination_arguments.parse_args(request)
         page = args.get('page', 0)
         per_page = args.get('per_page')
-        sort_by = args.get('sort_by', 'rating')
-        is_descending = args.get('is_descending', True)
+        sort_by = args.get('sort_by', 'rate')
+        is_descending = args.get('is_descending', 1)
         total, items = get_companies_count_and_page(page, per_page, sort_by, is_descending)
         result = {
             'page': page,
